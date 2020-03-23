@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap.css">
+    <style>
+        table td,
+        table th {
+            border: 1px solid black;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row container-fluid" style=" margin: 20px 0; padding: 10px">
+        <div class="col-md-6">
+            <input id="search-field" type="text" style="border: 1px solid black" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <button id="search" class="btn btn-info btn-outline btn-sm" style="margin-top: 2px"> <i class="fa fa-plus"></i> Search </button>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-info btn-outline pull-right btn-sm" style="margin-top: 2px" data-toggle="modal"
+                data-target="#modal-create-config"> <i class="fa fa-plus"></i> Add New Project </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="data">
+                            <thead>
+                                <tr style="background-color: paleturquoise">
+                                    <th>Server</th>
+                                    <th>Name</th>
+                                    <th>TotalReq</th>
+                                    <th>PendingReq</th>
+                                    <th>TotalTmProc<br />(microsecs)</th>
+                                    <th>LastTmProc<br />(microsecs)</th>
+                                    <th>ProcRate<br />(procs/second)</th>
+                                    <th>ReqRate<br />(reqs/second)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody" style="text-align: right">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="modal-create-config">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create Project</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Project Name</label>
+                        <input class="form-control" placeholder="Ex: zadmin" name="projectName" id = "projectName"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Host</label>
+                        <textarea class="form-control" id = "hosts" rows="5" placeholder="Example:  10.30.80.16; 10.30.80.17"
+                            name="config"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id ="createProject" type="button" class="btn btn-success"
+                        >SAVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/jquery.dataTables.js"></script>
+    <script src="js/dataTables.bootstrap.js"></script>
+
+</body>
+
+</html>

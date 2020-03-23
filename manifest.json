@@ -1,0 +1,15 @@
+{
+  "name": "Multi Profiler",
+  "version": "1.0",
+  "manifest_version": 2,
+  "browser_action":{
+    "default_icon": "icon.png"
+  },
+  "options_ui": {
+    "page": "popup.html"
+  },
+  "background": {
+    "page": "devtools.html"
+  },
+  "permissions": ["storage", "webRequest", "webRequestBlocking", "<all_urls>"]
+}
