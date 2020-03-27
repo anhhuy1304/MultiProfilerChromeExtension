@@ -8,26 +8,42 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/dataTables.bootstrap.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
     <style>
         table td,
         table th {
-            border: 1px solid black;
+            border: 1px solid black !important;
             padding: 5px;
+            text-align: right;
+        }
+
+        hr {
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: solid;
+            border-width: 0.5px;
+            border-color: #888;
         }
     </style>
 </head>
 
 <body>
     <div class="row container-fluid" style=" margin: 20px 0; padding: 10px">
-        <div class="col-md-6">
-            <input id="search-field" type="text" style="border: 1px solid black" class="form-control">
-        </div>
-        <div class="col-md-2">
-            <button id="search" class="btn btn-info btn-outline btn-sm" style="margin-top: 2px"> <i class="fa fa-plus"></i> Search </button>
-        </div>
-        <div class="col-md-4">
-            <button class="btn btn-info btn-outline pull-right btn-sm" style="margin-top: 2px" data-toggle="modal"
-                data-target="#modal-create-config"> <i class="fa fa-plus"></i> Add New Project </button>
+        <div class="col-md-12">
+            <button class="btn btn-info btn-outline pull-right btn-sm" style="margin:0 20px" data-toggle="modal"
+                data-target="#modal-create-config"> <i class="fa fa-plus"></i> Edit Project </button>
+            <div class="dropdown">
+                <button id="timeRange" class="btn btn-info btn-outline pull-right btn-sm dropdown-toggle" type="button"
+                    data-toggle="dropdown">Choose Project...
+                    <span class="caret"></span></button>
+                <ul id="listTimeRange" class="dropdown-menu" style="z-index: 5;">
+                    <li><a href="javascript:void(0)" data-value="zadmin">zadmin</a></li>
+                </ul>
+            </div>
+
         </div>
     </div>
 
@@ -36,12 +52,12 @@
             <div class="panel panel-default">
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <div class="table-responsive">
+                    <div class="table">
                         <table class="table table-striped table-bordered table-hover" id="data">
                             <thead>
                                 <tr style="background-color: paleturquoise">
                                     <th>Server</th>
-                                    <th>Name</th>
+                                    <th style="min-width: 300px;">Name</th>
                                     <th>TotalReq</th>
                                     <th>PendingReq</th>
                                     <th>TotalTmProc<br />(microsecs)</th>
@@ -67,34 +83,81 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Create Project</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h4 class="modal-title">Edit Project</h4>
+                    <button style="margin-top: -30px;" type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Project Name</label>
-                        <input class="form-control" placeholder="Ex: zadmin" name="projectName" id = "projectName"/>
+                    <div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="width:20%">Project Name</label>
+                            <input class="form-control" style="display: inline; width: 50%;" placeholder="Ex: zadmin"
+                                name="projectName" id="projectName" />
+                        </div>
+                        <div class="form-group">
+                            <label style="width:20%">Server</label>
+                            <div>
+                                <div style="margin-left: 20%; width: 50%;margin-top:2px; margin-bottom: 2px;">
+                                    <input class="form-control" style="display: inline; width: 70%;"
+                                        placeholder="Ex: 10.30.80.16" name="server" />
+                                    <button class="btn btn-danger btn-outline  btn-sm" style="width: 28%;"> Delete
+                                    </button>
+                                </div>
+                                <div style="margin-left: 20%; width: 50%;margin-top:2px; margin-bottom: 2px;">
+                                    <input class="form-control" style="display: inline; width: 70%;"
+                                        placeholder="Ex: 10.30.80.16" name="server" />
+                                    <button class="btn btn-danger btn-outline  btn-sm" style="width: 28%;"> Delete
+                                    </button>
+                                </div>
+                                <div style="margin-left: 20%; margin-top:2px; margin-bottom: 2px; width: 50%;">
+                                    <input class="form-control" style="display: inline; width: 70%;"
+                                        placeholder="Ex: 10.30.80.16" name="server" />
+                                    <button class="btn btn-danger btn-outline  btn-sm" style="width: 28%;"> Delete
+                                    </button>
+                                </div>
+                                <div style="margin-left: 20%; width: 50%;margin-top:2px; margin-bottom: 2px;">
+                                    <input class="form-control" style="display: inline; width: 70%;"
+                                        placeholder="Ex: 10.30.80.16" name="server" />
+                                    <button class="btn btn-success btn-outline  btn-sm" style="width: 28%;"> insert
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Host</label>
-                        <textarea class="form-control" id = "hosts" rows="5" placeholder="Example:  10.30.80.16; 10.30.80.17"
-                            name="config"></textarea>
-                    </div>
+                    <hr>
+                    <div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="width:20%">Project Name</label>
+                                <input class="form-control" style="display: inline; width: 50%;" placeholder="Ex: zadmin"
+                                    name="projectName" id="projectName" />
+                            </div>
+                            <div class="form-group">
+                                <label style="width:20%">Server</label>
+                                <div>
+                                    <div style="margin-left: 20%; width: 50%;margin-top:2px; margin-bottom: 2px;">
+                                        <input class="form-control" style="display: inline; width: 70%;"
+                                            placeholder="Ex: 10.30.80.16" name="server" />
+                                        <button class="btn btn-success btn-outline  btn-sm" style="width: 28%;"> insert
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    <button id="newProject" type="button" class="btn btn-info">new project</button>
                 </div>
                 <div class="modal-footer">
-                    <button id ="createProject" type="button" class="btn btn-success"
-                        >SAVE</button>
+                    <button id="createProject" type="button" class="btn btn-success">SAVE</button>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/jquery.dataTables.js"></script>
-    <script src="js/dataTables.bootstrap.js"></script>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/jquery.dataTables.js"></script>
+        <script src="js/dataTables.bootstrap.js"></script>
 
 </body>
 

@@ -90,6 +90,16 @@ $("#createProject").click(()=>{
 })
 
 $("#search").click(()=>{
+  findData();
+});
+
+$("#search-field").on('keyup', function (e) {
+  if (e.keyCode === 13) {
+    findData();
+  }
+});
+
+function findData(){
   let table = $('#data').dataTable();
   table.fnClearTable();
   let projectName = $("#search-field").val();
@@ -99,8 +109,7 @@ $("#search").click(()=>{
   listServer.forEach(server=>{
     getPortOfProject(server,projectName).then(port => {crawlData('http://'+server+":"+port+"/st", server);});
   })
-
-})
+}
 
 function saveToStorage(projectName, listHost){
   localStorage.setItem(projectName, listHost);
