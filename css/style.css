@@ -43,3 +43,7 @@
 .text-info{
     color: #2196F3!important;
 }
+.custom-control-label.opt-type{
+    border-right: solid 2px #2296f33d;
+    padding-right: 10px;
+}

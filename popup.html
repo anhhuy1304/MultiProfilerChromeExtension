@@ -67,7 +67,23 @@
                 <br />
                 <div class="card">
                     <div class="card-header text-right">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="opt-type-avg" name="opt-type"
+                                class="custom-control-input">
+                            <label class="custom-control-label opt-type bold" for="opt-type-avg">AVG</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="opt-type-sum" name="opt-type"
+                                class="custom-control-input">
+                            <label class="custom-control-label opt-type bold" for="opt-type-sum">SUM</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="opt-type-each" name="opt-type"
+                                class="custom-control-input ">
+                            <label class="custom-control-label opt-type bold" for="opt-type-each">EACH</label>
+                        </div>
                         <input class="" style="width: 300px; padding: 2px;" placeholder="Filter..">
+
                     </div>
                     <div class="card-body">
                         <table style="border-collapse:collapse; " border="1" cellpadding="5" cellspacing="5"
@@ -305,7 +321,6 @@
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <!-- <script src="selectize/js/selectize.js"></script> -->
     <script src="selectize/js/standalone/selectize.js"></script>
 
     <script src="js/ProfilerIndexedDB.js"></script>
