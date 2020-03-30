@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // $('#data').dataTable();
-  // findData();
+  findData();
   init();
 
 });
@@ -23,15 +23,6 @@ function init() {
     openDBSuccess, openDBError, openDBUpgradeNeeded, objName, keyPath, objData
   );
 }
-function openDBSuccess() {
-  console.log('open db success');
-}
-function openDBError() {
-  console.log('open db error');
-}
-function openDBUpgradeNeeded() {
-  console.log('open db upgradedneeded');
-}
 
 function save() {
   let data = {
@@ -53,11 +44,11 @@ function findData() {
   // let data = localStorage.getItem(projectName);
   // data.replace(/ /g,'');
   // let listServer = data.split(',')
-  // listServer = ['10.30.80.16'];
-  // projectName = "zadmin"
-  // listServer.forEach(server => {
-  //   getPortOfProject(server, projectName).then((allProject) => crawlData(allProject, projectName, server));
-  // });
+  listServer = ['10.30.80.16'];
+  projectName = "zadmin"
+  listServer.forEach(server => {
+    getPortOfProject(server, projectName).then((allProject) => crawlData(allProject, projectName, server));
+  });
 
 }
 
@@ -111,6 +102,7 @@ function crawlData(url, projectName, server) {
                   $($(profiler[i]).children()[6]).text(), //ProcRate
                   $($(profiler[i]).children()[7]).text()  //ReqRate
                 ]);
+                
               }
             }
           },
@@ -129,8 +121,6 @@ function saveToStorage(projectName, listHost) {
 
 function openDBSuccess() {
   console.log('open db success');
-  save();
-
 }
 function openDBError() {
   console.log('open db error');
