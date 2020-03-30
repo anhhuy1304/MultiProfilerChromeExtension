@@ -11,5 +11,6 @@
   "background": {
     "page": "devtools.html"
   },
-  "permissions": ["storage", "webRequest", "webRequestBlocking", "<all_urls>"]
+  "permissions": ["storage", "webRequest", "webRequestBlocking", "<all_urls>"],
+  "content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self'"
 }
