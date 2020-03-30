@@ -26,7 +26,7 @@ class ProfilerIndexedDB {
       onsuccess();
     };
     this.request.onupgradeneeded = event => {
-      db = event.target.result;
+      let db = event.target.result;
       let objectStore = db.createObjectStore(objName, { keyPath: keyPath });
       if (objData != undefined) {
         for (let key in objData) {

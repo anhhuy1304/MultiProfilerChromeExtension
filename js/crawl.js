@@ -1,49 +1,25 @@
 $(document).ready(function () {
-  // $('#data').dataTable();
+  initDB();
   findData();
-  init();
-
+  // window.setInterval(()=>{findData()}, 60000);
 });
 
 let regexGetHeaderURL = /(http){1}.*;{1}/;
 let regexGetPort = /(65){1}[0-9]*/;
 
-const INDEXED_DB_NAME = 'employee_db';
+const INDEXED_DB_NAME = 'profiler_db';
 let firstname, email, id;
 let profilerIndexedDB;
-let objData = [
-  { id: "1", name: "lam", email: "lam@whatever.com" },
-  { id: "2", name: "phong", email: "phong@whatever.com" }
-];
-let objName = 'employee';
-let keyPath = 'id';
-function init() {
+let objName = 'profiler';
+let keyPath = 'ts';
+function initDB() {
   profilerIndexedDB = new ProfilerIndexedDB(INDEXED_DB_NAME);
   profilerIndexedDB.open(
-    openDBSuccess, openDBError, openDBUpgradeNeeded, objName, keyPath, objData
+    openDBSuccess, openDBError, openDBUpgradeNeeded, objName, keyPath, null
   );
 }
 
-function save() {
-  let data = {
-    id: '5',
-    name: '111',
-    email: 'asd'
-  };
-
-
-  profilerIndexedDB.add(data).then(
-    event => console.log('add success', event),
-    error => console.log('add error', error)
-  );
-}
 function findData() {
-  // let table = $('#data').dataTable();
-  // table.fnClearTable();
-  // let projectName = $("#search-field").val();
-  // let data = localStorage.getItem(projectName);
-  // data.replace(/ /g,'');
-  // let listServer = data.split(',')
   listServer = ['10.30.80.16'];
   projectName = "zadmin"
   listServer.forEach(server => {
@@ -55,6 +31,8 @@ function findData() {
 
 function getPortOfProject(server, projectName) {
   let port = 65000;
+  let table = $('#data').dataTable();
+  table.fnClearTable();
   return new Promise((resolve, reject) => {
     $.ajax({
       type: 'GET',
@@ -94,7 +72,7 @@ function crawlData(url, projectName, server) {
                 $(profiler[i]).children().first().text(server)
                 table.fnAddData([
                   $($(profiler[i]).children()[0]).text(), //server
-                  $($(profiler[i]).children()[1]).text(), //name
+                  $($(profiler[i]).children()[1]).text(), //nameProject
                   $($(profiler[i]).children()[2]).text(), //totalReq
                   $($(profiler[i]).children()[3]).text(), //pendingReq
                   $($(profiler[i]).children()[4]).text(), //TotalTimeProc
@@ -102,7 +80,7 @@ function crawlData(url, projectName, server) {
                   $($(profiler[i]).children()[6]).text(), //ProcRate
                   $($(profiler[i]).children()[7]).text()  //ReqRate
                 ]);
-                
+                saveDataProfilerToIndexDB($(profiler[i]).children());
               }
             }
           },
@@ -127,4 +105,24 @@ function openDBError() {
 }
 function openDBUpgradeNeeded() {
   console.log('open db upgradedneeded');
+}
+
+function saveDataProfilerToIndexDB(dataCrawl){
+  let data = {
+    ts: new Date(),
+    server: $(dataCrawl[0]).text(),
+    nameProject: $(dataCrawl[1]).text(),
+    totalReq:$(dataCrawl[2]).text(),
+    pendingReq:$(dataCrawl[3]).text(),
+    TotalTimeProc:$(dataCrawl[4]).text(),
+    LastTmProc:$(dataCrawl[5]).text(),
+    ProcRate:$(dataCrawl[6]).text(),
+    ReqRate:$(dataCrawl[7]).text()
+  };
+
+
+  profilerIndexedDB.add(data).then(
+    event => console.log('add success', event),
+    error => console.log('add error', error)
+  );
 }
