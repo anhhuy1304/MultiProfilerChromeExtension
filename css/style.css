@@ -1,0 +1,45 @@
+.navbar{
+    background: #2196F3;
+}
+.navbar a{
+    color: white;
+}
+.navbar .navbar-brand{
+    text-transform: uppercase;
+    font-size: 1.2em;
+    padding-right: 20px;
+    border-right: solid;
+}
+.navbar .btn-outline-light:hover{
+    color: #2196F3;
+}
+.navbar .intput-project-search{
+    width: 400px;
+}
+.selectize-dropdown [data-selectable]{
+    padding: 5px 10px;
+    border-top: solid 1px #dadada3b; 
+}
+.selectize-dropdown .label{
+    font-weight: 600;
+    color: black;
+}
+
+.selectize-dropdown .caption{
+    font-weight: 200;
+    color: #333;
+}
+.selectize-input .name{
+    font-weight: 600;
+}
+.selectize-control.multi .selectize-input > div{
+    background: #03A9F4;
+    color: #ffffff;
+    border-radius: 3px
+}
+.bold{
+    font-weight: 600;
+}
+.text-info{
+    color: #2196F3!important;
+}
