@@ -29,6 +29,9 @@
             border-width: 0.5px;
             border-color: #888;
         }
+        .dataTables_filter {
+            display: none;
+        }
     </style>
 </head>
 
@@ -69,24 +72,24 @@
                     <div class="card-header text-right">
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="opt-type-avg" name="opt-type"
-                                class="custom-control-input">
+                                class="custom-control-input" value="2">
                             <label class="custom-control-label opt-type bold" for="opt-type-avg">AVG</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="opt-type-sum" name="opt-type"
-                                class="custom-control-input">
+                                class="custom-control-input" value="1">
                             <label class="custom-control-label opt-type bold" for="opt-type-sum">SUM</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
                             <input type="radio" id="opt-type-each" name="opt-type"
-                                class="custom-control-input ">
+                                class="custom-control-input " checked value="0">
                             <label class="custom-control-label opt-type bold" for="opt-type-each">EACH</label>
                         </div>
-                        <input class="" style="width: 300px; padding: 2px;" placeholder="Filter..">
+                        <input id='filter' class="" style="width: 300px; padding: 2px;" placeholder="Filter..">
 
                     </div>
                     <div class="card-body">
-                        <table style="border-collapse:collapse; " border="1" cellpadding="5" cellspacing="5"
+                        <table id="data" style="border-collapse:collapse; border:1" cellpadding="5" cellspacing="5"
                             width="100%">
                             <thead>
                                 <tr>
@@ -117,76 +120,6 @@
                                 </tr>
                             </thead>
                             <tbody style="text-align: right">
-                                <tr>
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">BackgroundService.crawlES</td>
-                                    <td>1,728</td>
-                                    <td>0</td>
-                                    <td>2,084,431,110</td>
-                                    <td>34,920</td>
-                                    <td>0.83</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr style="background-color: beige">
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">PCWebAPIController.POST</td>
-                                    <td>971</td>
-                                    <td>0</td>
-                                    <td>203,408,564</td>
-                                    <td>90,343</td>
-                                    <td>4.77</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">PCWebMonitorControllerV2.GET</td>
-                                    <td>2</td>
-                                    <td>0</td>
-                                    <td>1,823,029</td>
-                                    <td>388,232</td>
-                                    <td>1.10</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr style="background-color: beige">
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">PCWebMonitorDetailController.GET</td>
-                                    <td>1</td>
-                                    <td>0</td>
-                                    <td>384,833</td>
-                                    <td>384,833</td>
-                                    <td>2.60</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">ScheduleService.Alert.CPU</td>
-                                    <td>34,226</td>
-                                    <td>0</td>
-                                    <td>14,496,308</td>
-                                    <td>395</td>
-                                    <td>2,361.01</td>
-                                    <td>0.10</td>
-                                </tr>
-                                <tr style="background-color: beige">
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">ScheduleService.Warmup.CTL</td>
-                                    <td>8</td>
-                                    <td>0</td>
-                                    <td>136,406,955</td>
-                                    <td>10,405,476</td>
-                                    <td>0.06</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center">10.30.80.16</td>
-                                    <td style="text-align: left">ScheduleService.Warmup.MSG</td>
-                                    <td>8</td>
-                                    <td>0</td>
-                                    <td>135,316,991</td>
-                                    <td>9,437,309</td>
-                                    <td>0.06</td>
-                                    <td>0.00</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -288,44 +221,47 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle">Manage Projects</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" id="manageProject" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <label class="bold text-info">zadmin</label>
-                            <input type="text" class="input-server-ips" placeholder="Server IP...">
-                        </li>
-                        <li class="list-group-item">
-                            <label class="bold text-info">zadmin</label>
-                            <input type="text" class="input-server-ips" placeholder="Server IP...">
-                        </li>
-                        <li class="list-group-item">
-                            <label class="bold text-info">zadmin</label>
-                            <input type="text" class="input-server-ips" placeholder="Server IP...">
-                        </li>
-                        <li class="list-group-item">
-                            <label class="bold text-info">zadmin</label>
-                            <input type="text" class=" input-server-ips" placeholder="Server IP...">
-                        </li>
+                    <ul id ='listProject' class="list-group">
                     </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button id="btnSaveManageProject" type="button" data-dismiss="modal" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script id="itemManageServer" type="x-tmpl-mustache">
+        [[#projects]]
+            <li class="list-group-item">
+                <label class="bold text-info" name="project">[[projectName]]</label>
+                <input type="text" id="input-server-ips-[[projectName]]" placeholder="Server IP...">
+            </li>
+        [[/projects]]
+    </script>
+    <script id="buttonNewProject" type="x-tmpl-mustache">
+        <li id="newProjectLi"  class="list-group-item">
+            <button id="newProject" type="button" class="btn btn-success">+ New project</button>
+        </li>
+    </script>
+    <script id="liDontIdNewProject" type="x-tmpl-mustache">
+            <li class="list-group-item">
+                <input id='newProjectValue' type="text" style="margin-bottom:5px; width:100%; font-size:13px; padding: 8px 8px;border: 1px solid #d0d0d0;border-radius: 3px;" id="newProjectName" placeholder="Project name...">
+                <input type="text" id="newServer" placeholder="Server IP...">
+            </li>
+    </script>
     <script src="js/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="selectize/js/standalone/selectize.js"></script>
-
     <script src="js/ProfilerIndexedDB.js"></script>
+    <script src="js/mustache.min.js"></script>
     <script src="js/crawl.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="js/manageProject.js"></script>
     <script src="js/jquery.dataTables.js"></script>
     <script src="js/dataTables.bootstrap.js"></script>
