@@ -47,3 +47,6 @@
     border-right: solid 2px #2296f33d;
     padding-right: 10px;
 }
+.table td, .table th{
+    padding: .5rem;
+}
