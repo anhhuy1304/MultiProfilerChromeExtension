@@ -2,29 +2,39 @@ $(document).ready(function () {
     initDB(); //init IndexedDB
     initSearchProject(); //init project from localstorage
     initSearchData(); //search in table data 
-    $('#intput-interval').selectize({
-        create: false, 
-        width: "100px",
-        onChange: function () {
-            findData(projectName, listServer,optionView,listServer.length );
-        }
-    });
+    initRefresh();
 });
 
-function initInterval(){
-    
+function initRefresh() {
+    $('#intput-interval').selectize({
+        create: false,
+        width: "100px",
+        onChange: function () {
+            refresh();
+        }
+    });
+    $("#btn-refresh").click(function () {
+        refresh();
+    });
+
+}
+function refresh() {
+    $("#btn-refresh i").addClass("fa-spin");
+    RealtimeStats.refresh(() => {
+        $("#btn-refresh i").removeClass("fa-spin");
+    })
 }
 
-$('#modal-edit-project').on('show.bs.modal', function() {
+$('#modal-edit-project').on('show.bs.modal', function () {
     $('#listProject').empty();
     let projects = [];
     let servers = {};
-    const storage = {...localStorage};
-    for( let projectName in storage){
-        projects.push({'projectName': projectName});
+    const storage = { ...localStorage };
+    for (let projectName in storage) {
+        projects.push({ 'projectName': projectName });
         servers[projectName] = storage[projectName].split(',');
     }
-    let data = {projects: projects};
+    let data = { projects: projects };
     let templateOwner = $("#itemManageServer").html();
     let projectHTML = Mustache.render(templateOwner, data);
     let buttonTemplate = $("#buttonNewProject").html();
@@ -64,7 +74,7 @@ $('#modal-edit-project').on('show.bs.modal', function() {
     }
 });
 
-$(document).on('click', '#newProject', function() {
+$(document).on('click', '#newProject', function () {
     $("#newProjectLi").remove();
 
     let newProjectTemplate = $("#liDontIdNewProject").html();
@@ -76,45 +86,45 @@ $(document).on('click', '#newProject', function() {
         persist: false,
         maxItems: null,
         delimiter: ','
-        
+
     });
 
 });
 
-$("#btnSaveManageProject").click(()=>{
+$("#btnSaveManageProject").click(() => {
     //save update current project
     let currentProject = [];
-    $("label[name=project]").each(function(){
+    $("label[name=project]").each(function () {
         currentProject.push($(this).text());
     });
-    for(i in currentProject){
-        let value = $("#input-server-ips-"+currentProject[i]).val().split(',');
+    for (i in currentProject) {
+        let value = $("#input-server-ips-" + currentProject[i]).val().split(',');
         localStorage.setItem(currentProject[i], value);
     }
-    
+
     const newProject = $("#newProjectValue").val();
     const newServer = $("#newServer").val();
-    if(newProject!= undefined && newProject.length > 0 && newServer != undefined && newServer.length > 0){
+    if (newProject != undefined && newProject.length > 0 && newServer != undefined && newServer.length > 0) {
         const listNewServer = newServer.split(',');
         localStorage.setItem(newProject, listNewServer);
     }
-    const storage = {...localStorage};
+    const storage = { ...localStorage };
     let option = [];
-    for(project in storage){
-        option.push({name:project, servers: storage[project]});
+    for (project in storage) {
+        option.push({ name: project, servers: storage[project] });
     }
     $('#intput-project-search').selectize()[0].selectize.addOption(option);
 })
 
-function initSearchProject(){
-    const storage = {...localStorage};
+function initSearchProject() {
+    const storage = { ...localStorage };
     let option = [];
-    for(project in storage){
-        option.push({name:project, servers: storage[project]});
+    for (project in storage) {
+        option.push({ name: project, servers: storage[project] });
     }
 
     $('#intput-project-search').selectize({
-        create: false, 
+        create: false,
         searchField: ['name', 'servers'],
         valueField: 'name',
         labelField: 'name',
@@ -136,17 +146,17 @@ function initSearchProject(){
             optionView = $('input[name="opt-type"]:checked').val();
             const projectName = $('#intput-project-search').val();
             const listServer = storage[projectName].split(',');
-            findData(projectName, listServer,optionView,listServer.length );
+            findData(projectName, listServer, optionView, listServer.length);
         }
     });
 }
-function initSearchData(){
+function initSearchData() {
     const table = $('#data').DataTable({
         // searching: false,
         paging: false,
         info: false,
     });
-    $('#filter').on( 'keyup change clear', function () {
+    $('#filter').on('keyup change clear', function () {
         table.search(this.value).draw();
-    } );
+    });
 }
