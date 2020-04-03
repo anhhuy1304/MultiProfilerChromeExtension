@@ -11,28 +11,6 @@
     <link rel="stylesheet" href="fontawesome/css/all.css">
     <link rel="stylesheet" href="selectize/css/selectize.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-        table td,
-        table th {
-            border: 1px solid black !important;
-            padding: 5px;
-            text-align: right;
-        }
-
-        hr {
-            display: block;
-            margin-top: 0.5em;
-            margin-bottom: 0.5em;
-            margin-left: auto;
-            margin-right: auto;
-            border-style: solid;
-            border-width: 0.5px;
-            border-color: #888;
-        }
-        .dataTables_filter {
-            display: none;
-        }
-    </style>
 </head>
 
 <body>
@@ -49,6 +27,27 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
+                <div class="form-inline my-6 my-lg-6">
+                    <select class="mr-sm-6 intput-interval" id="intput-interval"
+                        placeholder="Refrest interval..">
+                        <option value="2">
+                            2 Seconds
+                        </option>
+                        <option value="5">
+                            5 Seconds
+                        </option>
+                        <option value="10">
+                            10 Seconds
+                        </option>
+                        <option value="60">
+                            1 Minute
+                        </option>
+                        <option value="60">
+                            3 Minute
+                        </option>
+                    </select>
+                </div>
+                <button class="btn btn-outline-light my-2 my-sm-0" type="button" style="margin-right: 10px;"> <i class="fas fa-sync"></i> Refresh</button>
                 <button class="btn btn-outline-light my-2 my-sm-0" type="button" data-toggle="modal"
                     data-target="#modal-edit-project"> <i class="fas fa-cogs"></i> Manage
                     Project</button>

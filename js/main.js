@@ -1,9 +1,19 @@
 $(document).ready(function () {
     initDB(); //init IndexedDB
     initSearchProject(); //init project from localstorage
-    initSearchData(); //search in table data
+    initSearchData(); //search in table data 
+    $('#intput-interval').selectize({
+        create: false, 
+        width: "100px",
+        onChange: function () {
+            findData(projectName, listServer,optionView,listServer.length );
+        }
+    });
 });
 
+function initInterval(){
+    
+}
 
 $('#modal-edit-project').on('show.bs.modal', function() {
     $('#listProject').empty();
