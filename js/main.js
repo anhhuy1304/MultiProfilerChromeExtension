@@ -1,24 +1,46 @@
+GlobalConfig = {
+    intervalTime: parseInt(localStorage.getItem("config.interval")) ? parseInt(localStorage.getItem("config.interval")) : 2,
+    setIntervalTime: function (val) {
+        GlobalConfig.intervalTime = val;
+        localStorage.setItem("config.interval", GlobalConfig.intervalTime);
+    }
+}
 $(document).ready(function () {
     initDB(); //init IndexedDB
     initSearchProject(); //init project from localstorage
     initSearchData(); //search in table data 
     initRefresh();
 });
-
+var refreshInputSelector;
+var refreshTimer;
 function initRefresh() {
-    $('#intput-interval').selectize({
+    $selectize = $('#intput-interval').selectize({
         create: false,
         width: "100px",
-        onChange: function () {
+        onChange: function (value) {
+            GlobalConfig.setIntervalTime(parseInt(value));
+            setupIntervalRefresh();
             refresh();
         }
     });
+    refreshInputSelector = $selectize[0].selectize;
     $("#btn-refresh").click(function () {
+        setupIntervalRefresh();
         refresh();
     });
-
+    if (GlobalConfig.intervalTime != parseInt(refreshInputSelector.getValue())) {
+        refreshInputSelector.setValue(GlobalConfig.intervalTime);
+    }
+    setupIntervalRefresh();
+}
+function setupIntervalRefresh() {
+    if (refreshTimer) {
+        clearInterval(refreshTimer);
+    }
+    refreshTimer = setInterval(refresh, GlobalConfig.intervalTime * 1000);
 }
 function refresh() {
+    console.log("refresh")
     $("#btn-refresh i").addClass("fa-spin");
     RealtimeStats.refresh(() => {
         $("#btn-refresh i").removeClass("fa-spin");
