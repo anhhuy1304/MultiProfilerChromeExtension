@@ -1,99 +1,38 @@
-window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
-window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+class ProfilerIndexedDB {
+  constructor() {
+    this.historyDB = new WrapperIndexedDB("history_db");
+  }
 
-if (!window.indexedDB) {
-  window.alert("Your browser doesn't support IndexedDB.");
+  async openDB(){
+    await this.historyDB.open(
+      openDBSuccess, openDBError, openDBUpgradeNeeded, 'profiler', 'ts', null
+    );
+  }
+  saveDataProfilerToIndexDB(dataCrawl) {
+    let data = {
+      ts: new Date(),
+      server: $(dataCrawl[0]).text(),
+      nameProject: $(dataCrawl[1]).text(),
+      totalReq: $(dataCrawl[2]).text(),
+      pendingReq: $(dataCrawl[3]).text(),
+      TotalTimeProc: $(dataCrawl[4]).text(),
+      LastTmProc: $(dataCrawl[5]).text(),
+      ProcRate: $(dataCrawl[6]).text(),
+      ReqRate: $(dataCrawl[7]).text()
+    };
+    this.historyDB.add(data).then(
+      event => console.log('add success', event),
+      error => console.log('add error', error)
+    );
+  }
 }
 
-class ProfilerIndexedDB {
-  constructor(_dbName) {
-    this.dbName = _dbName;
-    this.dbVersionNumber = 1;
-    this.db = null;
-  }
-
-  setDBVersionNumber(_dbVersionNumber) {
-    this.dbVersionNumber = _dbVersionNumber;
-  }
-
-  async open(onsuccess, onerror, onupgradeneeded, objName, keyPath, objData) {
-    this.objName = objName;
-    this.request = window.indexedDB.open(this.dbName, this.dbVersionNumber);
-    this.request.onerror = event => onerror();
-    this.request.onsuccess = event => {
-      this.db = this.request.result;
-      onsuccess();
-    };
-    this.request.onupgradeneeded = event => {
-      let db = event.target.result;
-      let objectStore = db.createObjectStore(objName, { keyPath: keyPath });
-      if (objData != undefined) {
-        for (let key in objData) {
-          objectStore.add(objData[key]);
-        }
-      }
-      onupgradeneeded();
-    }
-  }
-
-  readAll(callback) {
-    let objectStore = this.db.transaction(this.objName).objectStore(this.objName);
-    objectStore.openCursor().onsuccess = function (event) {
-      let cursor = event.target.result;
-      if (cursor) {
-        callback(cursor);
-        cursor.continue();
-      }
-      else {
-        console.log("No more entries!");
-      }
-    };
-  }
-
-  read(id) {
-    let transaction = this.db.transaction([this.objName]);
-    let objectStore = transaction.objectStore(this.objName);
-    let keySearch = '' + id;
-
-    return new Promise((resolve, reject) => {
-      let request = objectStore.get(id);
-      request.onerror = event => reject(event);
-      request.onsuccess = event => resolve(request.result);
-    });
-  }
-
-  add(objData) {
-    let transaction = this.db.transaction([this.objName], 'readwrite');
-    let objectStore = transaction.objectStore(this.objName);
-
-    return new Promise((resolve, reject) => {
-      let request = objectStore.add(objData);
-      request.onsuccess = event => resolve(event);
-      request.onerror = event => reject(event);
-    });
-  }
-
-  put(objData) {
-    let transaction = this.db.transaction([this.objName], 'readwrite');
-    let objectStore = transaction.objectStore(this.objName);
-
-    return new Promise((resolve, reject) => {
-      let request = objectStore.put(objData);
-      request.onsuccess = event => resolve(event);
-      request.onerror = (event) => reject(event);
-    });
-  }
-
-  remove(id) {
-    let transaction = this.db.transaction([this.objName], 'readwrite');
-    let objectStore = transaction.objectStore(this.objName);
-    let keySearch = '' + id;
-
-    return new Promise((resolve, reject) => {
-      let request = objectStore.delete(id);
-      request.onerror = event => reject(event);
-      request.onsuccess = event => resolve(event);
-    });
-  }
-};
+function openDBSuccess() {
+  console.log('open db success');
+}
+function openDBError() {
+  console.log('open db error');
+}
+function openDBUpgradeNeeded() {
+  console.log('open db upgradedneeded');
+}

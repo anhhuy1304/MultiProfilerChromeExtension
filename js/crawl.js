@@ -2,27 +2,16 @@
 let regexGetHeaderURL = /(http){1}.*;{1}/;
 let regexGetPort = /(65){1}[0-9]*/;
 
-const INDEXED_DB_NAME = 'profiler_db';
-let firstname, email, id;
-let profilerIndexedDB;
-let objName = 'profiler';
-let keyPath = 'ts';
 
-function initDB() {
-  profilerIndexedDB = new ProfilerIndexedDB(INDEXED_DB_NAME);
-  profilerIndexedDB.open(
-    openDBSuccess, openDBError, openDBUpgradeNeeded, objName, keyPath, null
-  );
-}
-
-function findData(projectName, listServer, optionDisplay, numberServer) {
-  listServer.forEach(server => {
-    getPortOfProject(server, projectName)
-      .then((allProject) => crawlData(allProject, projectName, server))
-      .then((fullyData) => displayData(fullyData, optionDisplay, numberServer))
-      .catch(data => { console.log('loi cmnr', data) });
-  });
-
+async function findData(projectName, listServer, optionDisplay, numberServer) {
+  let fullData = [];
+  for( i in listServer){
+    await getPortOfProject(listServer[i], projectName)
+      .then((allProject) => crawlData(allProject, projectName, listServer[i]))
+      .then((fullyData) => fullData = fullData.concat(fullyData))
+      .catch(data => { console.log('loi crawl data', data) });
+  }
+  return fullData;
 }
 
 
@@ -72,10 +61,6 @@ function crawlData(url, projectName, server) {
   });
 }
 
-function saveToStorage(projectName, listHost) {
-  localStorage.setItem(projectName, listHost);
-}
-
 function callAjax(url, projectName, server) {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -100,7 +85,7 @@ function callAjax(url, projectName, server) {
               ProcRate: $($(profiler[i]).children()[6]).text(),
               ReqRate: $($(profiler[i]).children()[7]).text(),
             })
-            saveDataProfilerToIndexDB($(profiler[i]).children());
+            // saveDataProfilerToIndexDB($(profiler[i]).children());
           }
           resolve(FullyData);
         } else {
@@ -114,120 +99,7 @@ function callAjax(url, projectName, server) {
     });
   })
 }
-function openDBSuccess() {
-  console.log('open db success');
-}
-function openDBError() {
-  console.log('open db error');
-}
-function openDBUpgradeNeeded() {
-  console.log('open db upgradedneeded');
-}
-
-function saveDataProfilerToIndexDB(dataCrawl) {
-  let data = {
-    ts: new Date(),
-    server: $(dataCrawl[0]).text(),
-    nameProject: $(dataCrawl[1]).text(),
-    totalReq: $(dataCrawl[2]).text(),
-    pendingReq: $(dataCrawl[3]).text(),
-    TotalTimeProc: $(dataCrawl[4]).text(),
-    LastTmProc: $(dataCrawl[5]).text(),
-    ProcRate: $(dataCrawl[6]).text(),
-    ReqRate: $(dataCrawl[7]).text()
-  };
-
-
-  profilerIndexedDB.add(data).then(
-    event => console.log('add success', event),
-    error => console.log('add error', error)
-  );
-}
 
 
 
-function displayData(fullyData, optionDisplay, numberServer) {
-  let table = $('#data').dataTable();
-  if (optionDisplay == 2) {//avg
-    dataSum = sumDataByProject(fullyData);
-    for (index in dataSum) {
-      table.fnAddData([
-        dataSum[index].server,
-        dataSum[index].nameProject,
-        dataSum[index].totalReq / numberServer,
-        dataSum[index].pendingReq / numberServer,
-        dataSum[index].TotalTimeProc / numberServer,
-        dataSum[index].LastTmProc / numberServer,
-        dataSum[index].ProcRate / numberServer,
-        dataSum[index].ReqRate / numberServer,
-      ]);
-    }
-  } else if (optionDisplay == 1) { //sum
-    dataSum = sumDataByProject(fullyData);
-    dataSum = sumDataByProject(fullyData);
-    for (index in dataSum) {
-      table.fnAddData([
-        dataSum[index].server,
-        dataSum[index].nameProject,
-        dataSum[index].totalReq,
-        dataSum[index].pendingReq,
-        dataSum[index].TotalTimeProc,
-        dataSum[index].LastTmProc,
-        dataSum[index].ProcRate,
-        dataSum[index].ReqRate,
-      ]);
-    }
-  } else {//each
-    console.log(fullyData.length)
-    for (index in fullyData) {
-      console.log('inhear');
-      table.fnAddData([
-        fullyData[index].server,
-        fullyData[index].nameProject,
-        fullyData[index].totalReq,
-        fullyData[index].pendingReq,
-        fullyData[index].TotalTimeProc,
-        fullyData[index].LastTmProc,
-        fullyData[index].ProcRate,
-        fullyData[index].ReqRate,
-      ]);
-    }
 
-  }
-}
-
-function sumDataByProject(fullyData) {
-  var result = fullyData.reduce(function (acc, val) {
-    var o = acc.filter(function (obj) {
-      return obj.nameProject == val.nameProject;
-    }).pop() || {
-      server: val.server,
-      nameProject: val.nameProject,
-      totalReq: 0,
-      pendingReq: 0,
-      TotalTimeProc: 0,
-      LastTmProc: 0,
-      ProcRate: 0,
-      ReqRate: 0,
-    };
-
-    o.totalReq += val.totalReq;
-    o.pendingReq += val.pendingReq;
-    o.TotalTimeProc += val.TotalTimeProc;
-    o.LastTmProc += val.LastTmProc;
-    o.ProcRate += val.ProcRate;
-    o.ReqRate += val.ReqRate;
-    acc.push(o);
-    return acc;
-  }, []);
-  result = getUnique(result, 'nameProject')
-  return result;
-}
-
-function getUnique(arr, comp) {
-  const unique = arr
-    .map(e => e[comp])
-    .map((e, i, final) => final.indexOf(e) === i && i)
-    .filter(e => arr[e]).map(e => arr[e]);
-  return unique;
-}

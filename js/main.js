@@ -1,35 +1,33 @@
-GlobalConfig = {
-    intervalTime: parseInt(localStorage.getItem("config.interval")) ? parseInt(localStorage.getItem("config.interval")) : 2,
-    setIntervalTime: function (val) {
-        GlobalConfig.intervalTime = val;
-        localStorage.setItem("config.interval", GlobalConfig.intervalTime);
-    }
-}
+let globalConfig;
+let configIndexedDB;
+let refreshInputSelector;
+let refreshTimer;
+
 $(document).ready(function () {
-    initDB(); //init IndexedDB
+    globalConfig = new GlobalConfig();
+    configIndexedDB = new ConfigIndexedDB();
+    render = new ViewerHandler();
     initSearchProject(); //init project from localstorage
     initSearchData(); //search in table data 
-    initRefresh();
 });
-var refreshInputSelector;
-var refreshTimer;
 function initRefresh() {
     $selectize = $('#intput-interval').selectize({
         create: false,
         width: "100px",
         onChange: function (value) {
-            GlobalConfig.setIntervalTime(parseInt(value));
+            globalConfig.setIntervalTime(parseInt(value));
             setupIntervalRefresh();
             refresh();
         }
     });
+
     refreshInputSelector = $selectize[0].selectize;
     $("#btn-refresh").click(function () {
         setupIntervalRefresh();
         refresh();
     });
-    if (GlobalConfig.intervalTime != parseInt(refreshInputSelector.getValue())) {
-        refreshInputSelector.setValue(GlobalConfig.intervalTime);
+    if (globalConfig.getInterval() != parseInt(refreshInputSelector.getValue())) {
+        refreshInputSelector.setValue(globalConfig.getInterval());
     }
     setupIntervalRefresh();
 }
@@ -37,10 +35,10 @@ function setupIntervalRefresh() {
     if (refreshTimer) {
         clearInterval(refreshTimer);
     }
-    refreshTimer = setInterval(refresh, GlobalConfig.intervalTime * 1000);
+    refreshTimer = setInterval(refresh, globalConfig.getInterval() * 1000);
 }
 function refresh() {
-    console.log("refresh")
+    crawlAndRenderData();
     $("#btn-refresh i").addClass("fa-spin");
     RealtimeStats.refresh(() => {
         $("#btn-refresh i").removeClass("fa-spin");
@@ -168,17 +166,30 @@ function initSearchProject() {
             optionView = $('input[name="opt-type"]:checked').val();
             const projectName = $('#intput-project-search').val();
             const listServer = storage[projectName].split(',');
-            findData(projectName, listServer, optionView, listServer.length);
+            globalConfig.setCurrentProject(projectName, listServer);
+            configIndexedDB.setConfigCurrentProject(projectName, listServer);
         }
     });
 }
 function initSearchData() {
     const table = $('#data').DataTable({
         // searching: false,
+        "order": [[ 1, "asc" ]],
         paging: false,
         info: false,
     });
     $('#filter').on('keyup change clear', function () {
         table.search(this.value).draw();
     });
+}
+
+$('input[name="opt-type"]').click(()=>{
+    crawlAndRenderData();
+});
+
+function crawlAndRenderData(){
+    let currentProject = globalConfig.getCurrentProject();
+    optionView = $('input[name="opt-type"]:checked').val();
+    findData(currentProject.projectName, currentProject.server, optionView, currentProject.server.length)
+    .then(data=>render.displayData(data, optionView, currentProject.server.length))
 }
