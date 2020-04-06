@@ -11,31 +11,31 @@ class ViewerHandler{
         table.fnAddData([
           dataSum[index].server,
           dataSum[index].nameProject,
-          dataSum[index].totalReq / numberServer,
-          dataSum[index].pendingReq / numberServer,
-          dataSum[index].TotalTimeProc / numberServer,
-          dataSum[index].LastTmProc / numberServer,
-          dataSum[index].ProcRate / numberServer,
-          dataSum[index].ReqRate / numberServer,
+          (Math.round(dataSum[index].totalReq / numberServer*100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].pendingReq / numberServer*100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].TotalTimeProc / numberServer*100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].LastTmProc / numberServer*100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].ProcRate / numberServer*100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].ReqRate / numberServer*100) / 100).toLocaleString(),
         ]);
       }
     });
   } else if (optionDisplay == 1) { //sum
     sumDataByProject(fullyData).then(dataSum=>{
       for (let index in dataSum) {
+        console.log(dataSum)
         table.fnAddData([
           dataSum[index].server,
           dataSum[index].nameProject,
-          dataSum[index].totalReq,
-          dataSum[index].pendingReq,
-          dataSum[index].TotalTimeProc,
-          dataSum[index].LastTmProc,
-          dataSum[index].ProcRate,
-          dataSum[index].ReqRate,
+          (Math.round(dataSum[index].totalReq *100) /100).toLocaleString(),
+          (Math.round(dataSum[index].pendingReq *100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].TotalTimeProc *100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].LastTmProc *100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].ProcRate *100) / 100).toLocaleString(),
+          (Math.round(dataSum[index].ReqRate *100) / 100).toLocaleString(),
         ]);}
     })
   } else {//each
-    console.log('oh man',fullyData)
     for (let index in fullyData) {
       table.fnAddData([
         fullyData[index].server,

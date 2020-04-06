@@ -117,9 +117,10 @@ $("#btnSaveManageProject").click(() => {
     $("label[name=project]").each(function () {
         currentProject.push($(this).text());
     });
-    for (i in currentProject) {
-        let value = $("#input-server-ips-" + currentProject[i]).val().split(',');
-        localStorage.setItem(currentProject[i], value);
+    for (let i in currentProject) {
+        let project = currentProject[i];
+        let value = $("#input-server-ips-" + project).val().split(',');
+        localStorage.setItem(project, value);
     }
 
     const newProject = $("#newProjectValue").val();
@@ -127,6 +128,7 @@ $("#btnSaveManageProject").click(() => {
     if (newProject != undefined && newProject.length > 0 && newServer != undefined && newServer.length > 0) {
         const listNewServer = newServer.split(',');
         localStorage.setItem(newProject, listNewServer);
+        console.log('save data');
     }
     const storage = { ...localStorage };
     let option = [];
