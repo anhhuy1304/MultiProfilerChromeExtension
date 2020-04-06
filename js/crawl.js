@@ -6,8 +6,9 @@ let regexGetPort = /(65){1}[0-9]*/;
 async function findData(projectName, listServer, optionDisplay, numberServer) {
   let fullData = [];
   for( i in listServer){
-    await getPortOfProject(listServer[i], projectName)
-      .then((allProject) => crawlData(allProject, projectName, listServer[i]))
+    let server = listServer[i];
+    await getPortOfProject(server, projectName)
+      .then((allProject) => crawlData(allProject, projectName, server))
       .then((fullyData) => fullData = fullData.concat(fullyData))
       .catch(data => { console.log('loi crawl data', data) });
   }
